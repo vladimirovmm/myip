@@ -4,7 +4,7 @@
 
 ## Установка
 
-Для установки необходимо установить у себя [Rust+Cargo](https://www.rust-lang.org/tools/install)
+Для установки необходим [Rust+Cargo](https://www.rust-lang.org/tools/install)
 
 ```bash
 cargo install --git https://github.com/vladimirovmm/myip.git
