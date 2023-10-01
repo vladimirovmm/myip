@@ -4,7 +4,10 @@ use anyhow::Result;
 use futures::future::join_all;
 
 async fn request_get_ip(url: &str) -> Result<String> {
-    let response = reqwest::get(url).await?;
+    let response = match reqwest::get(url).await {
+        Ok(response) => response,
+        Err(_) => return Ok(format!("{}: -", get_type_by_url(url))),
+    };
     let result_text = response.text().await?.trim().trim_matches('"').to_string();
 
     let ip = IpAddr::from_str(&result_text)?;
@@ -15,6 +18,10 @@ async fn request_get_ip(url: &str) -> Result<String> {
     };
 
     Ok(format!("{prefix}: {ip}"))
+}
+
+fn get_type_by_url(url: &str) -> String {
+    { &url[8..12] }.to_string()
 }
 
 #[tokio::main]
