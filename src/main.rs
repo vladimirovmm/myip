@@ -1,5 +1,3 @@
-use std::{net::IpAddr, str::FromStr};
-
 use anyhow::Result;
 use futures::future::join_all;
 
@@ -10,16 +8,13 @@ async fn request_get_ip(url: &str) -> Result<String> {
     };
     let result_text = response.text().await?.trim().trim_matches('"').to_string();
 
-    let ip = IpAddr::from_str(&result_text)?;
-
-    let prefix = match ip {
-        IpAddr::V4(_) => "ipv4",
-        IpAddr::V6(_) => "ipv6",
-    };
-
-    Ok(format!("{prefix}: {ip}"))
+    Ok(format!(
+        "{prefix}: {result_text}",
+        prefix = get_type_by_url(url)
+    ))
 }
 
+#[inline]
 fn get_type_by_url(url: &str) -> String {
     { &url[8..12] }.to_string()
 }
