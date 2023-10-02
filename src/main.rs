@@ -2,16 +2,14 @@ use anyhow::Result;
 use futures::future::join_all;
 
 async fn request_get_ip(url: &str) -> Result<String> {
+    let type_ip = get_type_by_url(url);
     let response = match reqwest::get(url).await {
         Ok(response) => response,
-        Err(_) => return Ok(format!("{}: -", get_type_by_url(url))),
+        Err(_) => return Ok(format!("{type_ip}: -")),
     };
     let result_text = response.text().await?.trim().trim_matches('"').to_string();
 
-    Ok(format!(
-        "{prefix}: {result_text}",
-        prefix = get_type_by_url(url)
-    ))
+    Ok(format!("{type_ip}: {result_text}"))
 }
 
 #[inline]
